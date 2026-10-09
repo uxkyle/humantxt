@@ -1,0 +1,121 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "human.txt — your terms for an AI-driven internet",
+  description = "An open standard and browser extension that lets you tell websites, apps and AI agents what they can use, what they can't, and how to treat you.",
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0e0d0c" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a href="/" class="logo" aria-label="human.txt home">human<span class="grad">.txt</span></a>
+        <nav aria-label="Main">
+          <a href="/#try">Try it</a>
+          <a href="/spec">Spec</a>
+          <a href="/demo">Demo</a>
+          <a href="https://github.com/uxkyle/humantxt">GitHub</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="foot">
+      <div class="wrap foot-inner">
+        <p>human.txt is an open-source project. Code MIT, spec CC BY 4.0.</p>
+        <p>
+          <a href="https://github.com/uxkyle/humantxt">GitHub</a> ·
+          <a href="/spec">Spec v0.1</a> ·
+          <a href="/.well-known/human.txt">Our human.txt</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    gap: 16px;
+  }
+  .logo {
+    font: 700 18px var(--font-mono);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  nav {
+    display: flex;
+    gap: clamp(14px, 3vw, 28px);
+  }
+  nav a {
+    font: 500 12px var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-muted);
+  }
+  nav a:hover {
+    color: var(--text);
+  }
+  .foot {
+    border-top: 1px solid var(--line);
+    padding: 40px 0;
+    color: var(--text-faint);
+    font-size: 14px;
+  }
+  .foot-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+  }
+  .foot p {
+    margin: 0;
+  }
+  @media (max-width: 520px) {
+    nav a:nth-child(1) {
+      display: none;
+    }
+  }
+</style>

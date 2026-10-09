@@ -1,0 +1,321 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Demo: a shop that honours human.txt" description="A fictional shop that asks for your human.txt commerce layer and adapts to it.">
+  <section class="demo-intro">
+    <div class="wrap">
+      <p class="eyebrow">Demo</p>
+      <h1>A shop that listens.</h1>
+      <p class="lede">
+        Fern &amp; Field is a made-up store. With the human.txt extension installed, it asks for your <code>[commerce]</code> layer
+        and changes how it behaves. Without the extension, it behaves like every other shop.
+      </p>
+      <p id="ua-status" class="ua-status" data-state="checking">Checking for a human.txt extension…</p>
+    </div>
+  </section>
+
+  <section class="shop">
+    <div class="wrap shop-grid">
+      <div class="shop-card">
+        <div class="shop-head">
+          <span class="shop-logo">Fern &amp; Field</span>
+          <span class="shop-pill" id="sale-pill" hidden>We won't sell your data</span>
+        </div>
+
+        <div class="ask">
+          <p>Share your preferences so we can respect them.</p>
+          <div class="ask-buttons">
+            <button class="btn btn-primary" id="ask-commerce" type="button" disabled>Share my commerce layer</button>
+            <button class="btn" id="ask-agent" type="button" disabled>Talk to our AI assistant</button>
+          </div>
+        </div>
+
+        <div class="block" id="recs">
+          <h3>Picked for you</h3>
+          <p class="muted" id="recs-note">Based on what you browsed today.</p>
+          <ul class="products">
+            <li><span class="swatch" style="--c:#c9a27a"></span>Linen apron</li>
+            <li><span class="swatch" style="--c:#7d8f69"></span>Seed starter kit</li>
+            <li><span class="swatch" style="--c:#b4654a"></span>Terracotta pots</li>
+          </ul>
+        </div>
+
+        <div class="block">
+          <h3>Stay in touch</h3>
+          <label class="check">
+            <input type="checkbox" id="newsletter" checked />
+            <span id="newsletter-label">Email me deals (daily)</span>
+          </label>
+          <p class="muted" id="retention-note">We keep your browsing history for 2 years.</p>
+        </div>
+
+        <div class="block" id="agent" hidden>
+          <h3>Assistant</h3>
+          <p class="bubble" id="agent-hello"></p>
+        </div>
+      </div>
+
+      <div class="received">
+        <p class="eyebrow">What the shop received</p>
+        <pre id="received"><code>Nothing yet.</code></pre>
+        <p class="muted small">
+          The ID is unique to this site. Open this page on another domain, such as a Vercel preview URL, and you'll get a different one.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import type { HumanTxtAPI, ShareResponse } from "@humantxt/core";
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const status = $("ua-status");
+  const askCommerce = $<HTMLButtonElement>("ask-commerce");
+  const askAgent = $<HTMLButtonElement>("ask-agent");
+  const received = $("received");
+
+  const api = (): HumanTxtAPI | undefined => (navigator as Navigator & { humanTxt?: HumanTxtAPI }).humanTxt;
+
+  function ready() {
+    if (!api()) return false;
+    status.dataset.state = "found";
+    status.textContent = `human.txt extension detected (v${api()!.version}). The shop will ask before reading anything.`;
+    askCommerce.disabled = false;
+    askAgent.disabled = false;
+    return true;
+  }
+
+  if (!ready()) {
+    window.addEventListener("humantxt:ready", ready, { once: true });
+    setTimeout(() => {
+      if (api()) return;
+      status.dataset.state = "missing";
+      status.innerHTML =
+        'No human.txt extension found. <a href="https://github.com/uxkyle/humantxt#install-the-extension">Install it</a> and reload this page.';
+    }, 800);
+  }
+
+  function show(res: ShareResponse) {
+    received.textContent = JSON.stringify({ id: res.id, granted: res.granted, layers: res.layers }, null, 2);
+  }
+
+  function applyCommerce(p: Record<string, string>) {
+    const contact = (p["Contact"] ?? "").toLowerCase();
+    const emailOk = contact.split(/[,;]/).map((s) => s.trim()).includes("email");
+    const freq = p["Contact-Frequency"] ?? "as-needed";
+    const newsletter = $<HTMLInputElement>("newsletter");
+    newsletter.checked = emailOk && freq !== "never";
+    newsletter.disabled = !emailOk;
+    $("newsletter-label").textContent = emailOk ? `Email me deals (${freq})` : "Email is off: your human.txt says no contact by email";
+
+    const personalised = (p["Personalization"] ?? "").toLowerCase() === "allow";
+    $("recs").classList.toggle("dim", !personalised);
+    $("recs-note").textContent = personalised
+      ? "Based on what you browsed today, as your human.txt allows."
+      : "Our bestsellers. We're not personalising, because your human.txt says not to.";
+
+    $("sale-pill").hidden = (p["Data-Sale"] ?? "").toLowerCase() !== "disallow";
+
+    const retention = p["Retention"];
+    $("retention-note").textContent = retention
+      ? `We'll keep your browsing history for ${retention === "session" ? "this session only" : retention === "none" ? "no time at all" : retention}, as your human.txt asks.`
+      : "We keep your browsing history for 2 years.";
+  }
+
+  function applyAgent(p: Record<string, string>) {
+    const parts: string[] = [];
+    if ((p["Disclose-AI"] ?? "") !== "no-preference") parts.push("Hi, I'm an AI assistant, not a person.");
+    if (p["Tone"]) parts.push(`I'll keep it ${p["Tone"]}.`);
+    if (p["Memory"]) parts.push(p["Memory"] === "persistent" ? "I'll remember this chat for next time." : p["Memory"] === "none" ? "I won't remember anything you say." : "I'll forget this chat when you leave.");
+    if (p["Act-On-My-Behalf"] === "ask-first") parts.push("I'll check with you before I add anything to your cart.");
+    if (p["Human-Escalation"] === "required") parts.push("Type “human” any time to reach a person.");
+    $("agent").hidden = false;
+    $("agent-hello").textContent = parts.join(" ");
+  }
+
+  async function ask(layer: "commerce" | "ai-agents", purpose: string) {
+    try {
+      const res = await api()!.request({ layers: [layer], purpose });
+      show(res);
+      if (res.layers.commerce) applyCommerce(res.layers.commerce);
+      if (res.layers["ai-agents"]) applyAgent(res.layers["ai-agents"]);
+    } catch (err) {
+      received.textContent = (err as Error).name === "HumanTxtDenied" ? "You declined. The shop gets nothing and carries on." : String(err);
+    }
+  }
+
+  askCommerce.addEventListener("click", () =>
+    ask("commerce", "Decide whether to personalise products, how often to email you, and how long to keep your history."),
+  );
+  askAgent.addEventListener("click", () => ask("ai-agents", "Let our shopping assistant talk to you the way you prefer."));
+</script>
+
+<style>
+  .demo-intro {
+    border-top: 0;
+    padding-bottom: 32px;
+  }
+  .demo-intro h1 {
+    font-size: clamp(40px, 7vw, 80px);
+    margin: 16px 0 20px;
+  }
+  .demo-intro code {
+    color: var(--accent-2);
+    font-size: 0.9em;
+  }
+  .ua-status {
+    margin: 28px 0 0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    font: 500 14px var(--font-mono);
+    color: var(--text-muted);
+  }
+  .ua-status[data-state="found"] {
+    border-color: color-mix(in srgb, var(--ok) 50%, transparent);
+    color: var(--ok);
+  }
+  .ua-status[data-state="missing"] {
+    border-color: color-mix(in srgb, var(--warn) 50%, transparent);
+    color: var(--warn);
+  }
+  .shop {
+    padding-top: 48px;
+  }
+  .shop-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .shop-card {
+    background: #f6f1e7;
+    color: #2b2620;
+    border-radius: var(--radius);
+    padding: 28px;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  .shop-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #d9cfbd;
+  }
+  .shop-logo {
+    font-size: 24px;
+    font-style: italic;
+  }
+  .shop-pill {
+    font: 600 12px var(--font-sans);
+    background: #2f5d3a;
+    color: #f6f1e7;
+    border-radius: 999px;
+    padding: 5px 12px;
+  }
+  .shop-pill[hidden] {
+    display: none;
+  }
+  .ask {
+    padding: 18px 0;
+    border-bottom: 1px solid #d9cfbd;
+  }
+  .ask p {
+    margin: 0 0 12px;
+  }
+  .ask-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .ask .btn {
+    color: #2b2620;
+    border-color: #b8ac97;
+  }
+  .ask .btn-primary {
+    color: #1a0f0a;
+    border-color: transparent;
+  }
+  .ask .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .block {
+    padding: 18px 0 4px;
+  }
+  .block[hidden] {
+    display: none;
+  }
+  .block h3 {
+    font: 600 17px var(--font-sans);
+    margin-bottom: 8px;
+  }
+  .muted {
+    color: #6f6556;
+    font-size: 15px;
+    margin: 0 0 10px;
+  }
+  .products {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .products li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--c);
+  }
+  #recs.dim .products {
+    filter: grayscale(1);
+    opacity: 0.6;
+  }
+  .check {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .bubble {
+    background: #fff;
+    border: 1px solid #d9cfbd;
+    border-radius: 12px 12px 12px 4px;
+    padding: 12px 14px;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 15px;
+  }
+  .received pre {
+    margin: 12px 0;
+    background: var(--bg-sunk);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    min-height: 200px;
+  }
+  .received .muted {
+    color: var(--text-faint);
+  }
+  .small {
+    font-size: 14px;
+  }
+  @media (max-width: 860px) {
+    .shop-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

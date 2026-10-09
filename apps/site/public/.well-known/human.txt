@@ -1,0 +1,14 @@
+# human.txt — https://humantxt.org
+# This is the project's own public base layer, published as an example.
+# Private layers stay in the browser extension and are never published.
+Version: 0.1
+Updated: 2026-10-09
+
+[*]
+Language: en
+Tracking: disallow
+Data-Sale: disallow
+AI-Training: allow
+AI-Summarize: allow
+Disclose-AI: required
+Contact: none

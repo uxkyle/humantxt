@@ -1,16 +1,400 @@
 ---
+import Base from "../layouts/Base.astro";
+import HeroSplit from "../components/HeroSplit.tsx";
+import Editor from "../components/Editor.tsx";
+
+const faqs: { q: string; a: string }[] = [
+  {
+    q: "What is human.txt?",
+    a: "A small plain-text file that says what websites, apps and AI agents may do with your data and how you want to be treated: whether they can train AI on you, sell your data, email you, or act on your behalf. It is split into layers so a shop, an AI assistant and a news site can each see only what applies to them.",
+  },
+  {
+    q: "Where does my file live?",
+    a: "On your device, inside the human.txt browser extension. Sites never download it on their own. They ask, you see who is asking and why, and you choose which layers to share. You can revoke access at any time.",
+  },
+  {
+    q: "Does this make me easier to track?",
+    a: "No. Every site gets a different ID, derived from a secret that never leaves your device. A shop can recognise you when you come back, but two sites can't compare IDs to learn you're the same person. There is deliberately no global ID.",
+  },
+  {
+    q: "Is my file encrypted?",
+    a: "Your identity is protected by hashing: sites only ever see a per-site ID. The file itself sits in the extension's private storage. A layer you choose to share is sent readable, because the site has to read it to honour it. Passphrase encryption and signed receipts are planned for v0.2.",
+  },
+  {
+    q: "Do websites have to obey it?",
+    a: "Not yet. Like robots.txt, human.txt works when entities choose to honour it. Some of what it says already has legal weight: in several US states, sites must honour Global Privacy Control, an opt-out signal for selling or sharing data. human.txt goes further than that one signal. AI agents are the other big audience: an assistant acting for you can read your file before it acts.",
+  },
+  {
+    q: "Didn't Do Not Track already fail?",
+    a: "Do Not Track was a single bit with no legal force, and it was easy to ignore. P3P asked people to read machine policies they never saw. human.txt is written by you, in your words, with per-entity layers, and it is aimed squarely at AI agents, which can read and follow instructions. Adoption is still the hard part, which is why this is open source and needs contributors.",
+  },
+  {
+    q: "Isn't humans.txt already a thing?",
+    a: "humans.txt (with an s) is a file sites publish to credit the people who built them. human.txt is the reverse: a file a person keeps to set terms for the sites they visit. The singular name and the /.well-known/ path keep the two from colliding.",
+  },
+  {
+    q: "Can I publish my file publicly?",
+    a: "Yes, optionally. Put your base layer at https://your-domain/.well-known/human.txt and any agent can read it. Only publish what you'd put on a public profile; the private layers stay in the extension.",
+  },
+];
+const snippet = `<span class="c">// Visitors with a human.txt user agent send \`Human-Txt: v=0.1\`</span>
+<span class="k">if</span> (navigator.humanTxt) {
+  <span class="k">const</span> me = <span class="k">await</span> navigator.humanTxt.request({
+    layers: [<span class="s">"commerce"</span>],
+    purpose: <span class="s">"Decide how often we email you."</span>,
+  });
+
+  me.id;                            <span class="c">// "ht1_…" (this site only)</span>
+  me.layers.commerce[<span class="s">"Contact"</span>];     <span class="c">// "email"</span>
+  me.layers.commerce[<span class="s">"Data-Sale"</span>];   <span class="c">// "disallow"</span>
+}`;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow hero-eyebrow">Open standard · v0.1 draft</p>
+      <h1 class="wordmark">human<span class="grad">.txt</span></h1>
+      <p class="hero-lede">
+        robots.txt lets websites set rules for machines. <strong>human.txt lets you set rules for them.</strong>{" "}
+        One file that tells every site, app and AI agent what they can use, what they can't, and how to treat you.
+      </p>
+      <div class="hero-cta">
+        <a href="#try" class="btn btn-primary">Write yours now →</a>
+        <a href="https://github.com/uxkyle/humantxt" class="btn">GitHub</a>
+      </div>
+      <HeroSplit client:load />
+    </div>
+  </section>
+
+  <section class="manifesto">
+    <div class="wrap">
+      <p class="eyebrow">Why</p>
+      <p class="manifesto-text">
+        The internet is about to be <span class="grad">read, summarised and acted on by AI</span> on your behalf and about you.
+        Every site has a privacy policy. Every app has terms. <em>You</em> have a cookie banner.
+        human.txt flips that: your preferences, written once, in plain words, carried with you. Share the right layer with
+        the right entity. Edit it as you change. It's yours.
+      </p>
+    </div>
+  </section>
+
+  <section class="pillars">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2>Own. Layer. Share.</h2>
+      <div class="pillar-grid">
+        <article class="pillar">
+          <p class="pillar-n">01</p>
+          <h3>Own</h3>
+          <p>
+            Your human.txt lives on your device in the browser extension, not on a server. No account and no sign-up. Plain text you
+            can read, edit and download any time.
+          </p>
+        </article>
+        <article class="pillar">
+          <p class="pillar-n">02</p>
+          <h3>Layer</h3>
+          <p>
+            Write a base layer for everyone, then layers for shops, AI agents, news, work and health. Each layer only overrides what it
+            needs to. A support bot learns how to talk to you; a shop learns how often it can email.
+          </p>
+        </article>
+        <article class="pillar">
+          <p class="pillar-n">03</p>
+          <h3>Share</h3>
+          <p>
+            Sites ask through the extension. You see who is asking and why, approve each layer, and can revoke it later. Each site gets
+            its own hashed ID, so nobody can follow you across the web with it.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="try" class="try">
+    <div class="wrap">
+      <p class="eyebrow">Try it</p>
+      <h2>Write your human.txt.</h2>
+      <p class="lede">
+        Edit the file on the left. Pick who's asking on the right to see exactly what they'd receive. Nothing you type leaves this page.
+      </p>
+      <div class="try-editor">
+        <Editor client:visible />
+      </div>
+    </div>
+  </section>
+
+  <section class="devs">
+    <div class="wrap devs-grid">
+      <div>
+        <p class="eyebrow">For developers</p>
+        <h2>Ask. Honour. Done.</h2>
+        <p class="lede">
+          If a visitor has the extension, <code>navigator.humanTxt</code> exists. Ask for the layer you need and say why. You get
+          the merged preferences and a per-site ID.
+        </p>
+        <div class="hero-cta">
+          <a href="/demo" class="btn btn-primary">See the demo</a>
+          <a href="/spec" class="btn">Read the spec</a>
+        </div>
+      </div>
+      <pre class="snippet"><code set:html={snippet} /></pre>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <p class="eyebrow">FAQ</p>
+      <h2>Fair questions.</h2>
+      <div class="faq-list">
+        {
+          faqs.map((f, i) => (
+            <details open={i === 0}>
+              <summary>
+                <span class="faq-n">Q{i + 1}</span>
+                {f.q}
+              </summary>
+              <p>{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="contribute">
+    <div class="wrap contribute-inner">
+      <h2>Help write the <span class="grad">rules for humans</span>.</h2>
+      <p class="lede">
+        human.txt is an early, open draft. The format, the vocabulary and the extension all need people who care: privacy folks,
+        AI builders, designers, lawyers, and anyone who wants a say.
+      </p>
+      <div class="hero-cta">
+        <a href="https://github.com/uxkyle/humantxt" class="btn btn-primary">Contribute on GitHub</a>
+        <a href="/spec" class="btn">Spec v0.1</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    border-top: 0;
+    padding-top: clamp(48px, 9vw, 110px);
+    overflow: hidden;
+  }
+  .hero-eyebrow {
+    margin: 0 0 18px;
+  }
+  .wordmark {
+    font: 700 clamp(64px, 15vw, 196px) / 0.9 var(--font-mono);
+    letter-spacing: -0.06em;
+    margin: 0 0 28px -0.04em;
+  }
+  .hero-lede {
+    font-size: clamp(19px, 2.3vw, 26px);
+    line-height: 1.45;
+    max-width: 34em;
+    color: var(--text-muted);
+    margin: 0;
+  }
+  .hero-lede strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 32px 0 0;
+  }
+  .hero :global(.hero-split) {
+    margin-top: clamp(48px, 7vw, 88px);
+  }
+
+  .manifesto-text {
+    font-size: clamp(24px, 3.6vw, 44px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin: 20px 0 0;
+    max-width: 26em;
+  }
+  .manifesto-text em {
+    font-style: normal;
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+  }
+
+  .pillars h2,
+  .try h2,
+  .devs h2,
+  .faq h2 {
+    margin: 16px 0 24px;
+  }
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+  .pillar {
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+  }
+  .pillar p {
+    color: var(--text-muted);
+    margin: 12px 0 0;
+  }
+  .pillar .pillar-n {
+    font: 500 12px var(--font-mono);
+    color: var(--accent);
+    margin: 0 0 28px;
+  }
+
+  .try-editor {
+    margin-top: 40px;
+  }
+
+  .devs-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 48px;
+    align-items: center;
+  }
+  .devs code {
+    font-size: 0.9em;
+    color: var(--text);
+  }
+  .snippet {
+    margin: 0;
+    padding: 24px;
+    background: var(--bg-sunk);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font: 14px/1.7 var(--font-mono);
+    overflow-x: auto;
+    color: var(--text);
+  }
+  .snippet .c {
+    color: var(--text-faint);
+  }
+  .snippet .k {
+    color: var(--accent-3);
+  }
+  .snippet .s {
+    color: var(--accent-2);
+  }
+
+  .faq-list {
+    margin-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 22px 0;
+    font-size: clamp(18px, 2vw, 22px);
+    font-weight: 500;
+    display: flex;
+    gap: 18px;
+    align-items: baseline;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: "+";
+    margin-left: auto;
+    font-family: var(--font-mono);
+    color: var(--text-faint);
+  }
+  details[open] summary::after {
+    content: "–";
+  }
+  .faq-n {
+    font: 500 12px var(--font-mono);
+    color: var(--accent);
+    min-width: 2.5em;
+  }
+  details p {
+    margin: 0 0 24px calc(2.5em + 18px);
+    color: var(--text-muted);
+    max-width: 62ch;
+  }
+
+  .contribute-inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .contribute h2 {
+    max-width: 14em;
+    margin-bottom: 20px;
+  }
+  .contribute .hero-cta {
+    justify-content: center;
+  }
+
+  @media (max-width: 860px) {
+    .pillar-grid,
+    .devs-grid {
+      grid-template-columns: 1fr;
+    }
+    details p {
+      margin-left: 0;
+    }
+  }
+
+  /* Hero split (rendered by HeroSplit.tsx) */
+  .hero :global(.hero-split) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border: 1px solid var(--line);
+    border-radius: calc(var(--radius) + 6px);
+    background: var(--bg-raised);
+    overflow: hidden;
+  }
+  .hero :global(.hs-col) {
+    padding: 24px 28px;
+    min-width: 0;
+  }
+  .hero :global(.hs-out) {
+    border-left: 1px solid var(--line);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent-3) 7%, transparent), transparent 60%);
+  }
+  .hero :global(.hs-col .eyebrow) {
+    margin: 0 0 14px;
+  }
+  .hero :global(.hs-out .chips) {
+    margin-bottom: 14px;
+  }
+  .hero :global(.hs-code) {
+    margin: 0;
+    font: 13.5px/1.75 var(--font-mono);
+    overflow-x: auto;
+  }
+  @media (max-width: 760px) {
+    .hero :global(.hero-split) {
+      grid-template-columns: 1fr;
+    }
+    .hero :global(.hs-out) {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+    .hero :global(.hs-col) {
+      padding: 18px;
+    }
+    .hero :global(.hs-code) {
+      font-size: 12.5px;
+    }
+  }
+</style>

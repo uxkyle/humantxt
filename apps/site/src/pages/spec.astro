@@ -1,0 +1,82 @@
+---
+import Base from "../layouts/Base.astro";
+import { Content, frontmatter } from "../../../../spec/human-txt-v0.1.md";
+---
+
+<Base title={`${frontmatter.title} specification`} description="The human.txt v0.1 draft specification: file format, layers, core keys, consent, pairwise IDs and the navigator.humanTxt API.">
+  <article class="wrap spec">
+    <p class="eyebrow">{frontmatter.status} · Updated {frontmatter.updated} · {frontmatter.license}</p>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .spec {
+    max-width: 860px;
+    padding-top: 64px;
+    padding-bottom: 96px;
+  }
+  .prose :global(h1) {
+    font: 700 clamp(40px, 7vw, 72px) / 1 var(--font-mono);
+    letter-spacing: -0.05em;
+    margin: 16px 0 28px;
+  }
+  .prose :global(h2) {
+    font-size: 30px;
+    margin: 64px 0 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .prose :global(h3) {
+    font-size: 20px;
+    margin: 36px 0 12px;
+  }
+  .prose :global(p),
+  .prose :global(li) {
+    color: var(--text-muted);
+  }
+  .prose :global(strong) {
+    color: var(--text);
+  }
+  .prose :global(code) {
+    font-size: 0.88em;
+    color: var(--accent-2);
+  }
+  .prose :global(pre) {
+    background: var(--bg-sunk) !important;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .prose :global(pre code) {
+    color: var(--text);
+  }
+  .prose :global(table) {
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 15px;
+    margin: 16px 0;
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    text-align: left;
+    vertical-align: top;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .prose :global(th) {
+    font: 500 12px var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .prose :global(td) {
+    color: var(--text-muted);
+  }
+</style>

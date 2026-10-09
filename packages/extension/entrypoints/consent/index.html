@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Share your human.txt?</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <header>
+        <span class="logo">human<span class="grad">.txt</span></span>
+      </header>
+      <p id="loading" class="loading">Loading request…</p>
+      <form id="form" hidden>
+        <p class="eyebrow">Request from</p>
+        <h1 id="origin"></h1>
+        <p class="eyebrow">They say it's to</p>
+        <blockquote id="purpose"></blockquote>
+        <p class="eyebrow">Choose what to share</p>
+        <div id="layers"></div>
+        <p class="fine">
+          They'll also get an ID that only works on this site. You can revoke access any time from the human.txt toolbar button.
+        </p>
+        <div class="actions">
+          <button class="btn" type="button" id="deny">Don't share</button>
+          <button class="btn btn-primary" type="submit" id="allow">Share selected</button>
+        </div>
+      </form>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>human.txt</title>
+    <meta name="manifest.type" content="browser_action" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <span class="logo">human<span class="grad">.txt</span></span>
+      <nav role="tablist" aria-label="Sections">
+        <button role="tab" aria-selected="true" aria-controls="tab-file" id="t-file">My file</button>
+        <button role="tab" aria-selected="false" aria-controls="tab-sites" id="t-sites">Sites</button>
+      </nav>
+    </header>
+
+    <section id="tab-file" role="tabpanel" aria-labelledby="t-file">
+      <textarea id="file" spellcheck="false" aria-label="Your human.txt"></textarea>
+      <ul id="problems" aria-label="Problems"></ul>
+      <footer>
+        <span id="status" role="status"></span>
+        <span class="actions">
+          <button class="btn" id="export" type="button">Export</button>
+          <button class="btn btn-primary" id="save" type="button" disabled>Save</button>
+        </span>
+      </footer>
+    </section>
+
+    <section id="tab-sites" role="tabpanel" aria-labelledby="t-sites" hidden>
+      <p class="hint">Sites you've shared layers with. Each one sees a different ID, so they can't link you to each other.</p>
+      <ul id="grants"></ul>
+    </section>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

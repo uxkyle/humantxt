@@ -5,7 +5,7 @@ import { Content, frontmatter } from "../../../../spec/human-txt-v0.1.md";
 
 <Base title={`${frontmatter.title} specification`} description="The human.txt v0.1 draft specification: file format, layers, core keys, consent, pairwise IDs and the navigator.humanTxt API.">
   <article class="wrap spec">
-    <p class="eyebrow">{frontmatter.status} · Updated {frontmatter.updated} · {frontmatter.license}</p>
+    <p class="eyebrow">{frontmatter.status} · Updated {new Date(frontmatter.updated).toISOString().slice(0, 10)} · {frontmatter.license}</p>
     <div class="prose">
       <Content />
     </div>

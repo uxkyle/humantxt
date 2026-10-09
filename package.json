@@ -11,8 +11,10 @@
   },
   "scripts": {
     "dev": "npm run dev -w @humantxt/site",
-    "build": "npm run build -w @humantxt/core && npm run build -w @humantxt/site",
+    "build": "npm run build -w @humantxt/site",
     "test": "npm test -w @humantxt/core",
+    "test:e2e": "npm run build -w @humantxt/site && npm run test:e2e -w @humantxt/extension",
+    "typecheck": "npm run typecheck -w @humantxt/core && npm run typecheck -w @humantxt/extension",
     "ext:dev": "npm run dev -w @humantxt/extension",
     "ext:build": "npm run build -w @humantxt/extension"
   }

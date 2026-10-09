@@ -1,22 +1,17 @@
-## Development
+## Repo
 
-When starting the dev server, use background mode:
+npm-workspaces monorepo. Node >= 22.12 (`nvm use`).
 
-```
-astro dev --background
-```
+- `spec/human-txt-v0.1.md` — the spec. Format changes must update the spec, `packages/core/src/vocabulary.ts` and core tests together.
+- `packages/core` — `@humantxt/core`, shared by the site and the extension. Exports TypeScript source directly (no build step).
+- `packages/extension` — WXT, Manifest V3 for Chrome and Firefox. `npm run test:e2e` drives the built extension with Playwright against the built site's `/demo`.
+- `apps/site` — Astro + one Preact island (`Editor.tsx`). Vercel Root Directory is `apps/site`.
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+## Commands
 
-## Documentation
+- `npm test` — core unit tests
+- `npm run typecheck`
+- `npm run test:e2e` — builds site + extension, runs Playwright
+- `npm run dev` — site dev server. Astro's dev server runs in background mode; manage it with `npx astro dev stop|status|logs` from `apps/site`.
 
-Full documentation: https://docs.astro.build
-
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+Astro docs: https://docs.astro.build

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [{ "header": "Human-Txt", "operation": "set", "value": "v=0.1" }]
+    },
+    "condition": { "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest"] }
+  }
+]

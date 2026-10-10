@@ -2,7 +2,7 @@
 
 **robots.txt lets websites set rules for machines. human.txt lets you set rules for them.**
 
-human.txt is an open standard and browser extension. With it, a person keeps one plain-text file that tells websites, apps and AI agents what they may use, what they may not, and how that person wants to be treated. The file is split into **layers**, so a shop, an AI assistant and a news site each see only the part meant for them.
+human.txt is an open standard and browser extension. With it, a person keeps one plain-text file that tells websites, apps and AI agents what they may use, what they may not, and how that person wants to be treated. The file is split into **layers**, so a storefront, an AI assistant and a news site each see only the part meant for them.
 
 - Website: [humantxt.org](https://humantxt.org)
 - Spec: [`spec/human-txt-v0.1.md`](spec/human-txt-v0.1.md) (draft)

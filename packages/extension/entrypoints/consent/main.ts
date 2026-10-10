@@ -6,7 +6,7 @@ const reqId = new URLSearchParams(location.search).get("req") ?? "";
 
 const LABELS: Record<string, string> = {
   "*": "Base layer (everyone)",
-  commerce: "Shopping",
+  commerce: "Storefronts",
   media: "News & social",
   "ai-agents": "AI agents",
   work: "Work",

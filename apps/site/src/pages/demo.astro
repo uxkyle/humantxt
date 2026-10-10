@@ -2,25 +2,25 @@
 import Base from "../layouts/Base.astro";
 ---
 
-<Base title="Demo: a shop that honours human.txt" description="A fictional shop that asks for your human.txt commerce layer and adapts to it.">
+<Base title="Demo: a storefront that honours human.txt" description="A fictional storefront that asks for your human.txt commerce layer and adapts to it.">
   <section class="demo-intro">
     <div class="wrap">
       <p class="eyebrow">Demo</p>
-      <h1>A shop that listens.</h1>
+      <h1>A storefront that listens.</h1>
       <p class="lede">
-        Fern &amp; Field is a made-up store. With the human.txt extension installed, it asks for your <code>[commerce]</code> layer
-        and changes how it behaves. Without the extension, it behaves like every other shop.
+        Fern &amp; Field is a made-up storefront. With the human.txt extension installed, it asks for your <code>[commerce]</code> layer
+        and changes how it behaves. Without the extension, it behaves like every other storefront.
       </p>
       <p id="ua-status" class="ua-status" data-state="checking">Checking for a human.txt extension…</p>
     </div>
   </section>
 
-  <section class="shop">
-    <div class="wrap shop-grid">
-      <div class="shop-card">
-        <div class="shop-head">
-          <span class="shop-logo">Fern &amp; Field</span>
-          <span class="shop-pill" id="sale-pill" hidden>We won't sell your data</span>
+  <section class="storefront">
+    <div class="wrap storefront-grid">
+      <div class="storefront-card">
+        <div class="storefront-head">
+          <span class="storefront-logo">Fern &amp; Field</span>
+          <span class="storefront-pill" id="sale-pill" hidden>We won't sell your data</span>
         </div>
 
         <div class="ask">
@@ -57,7 +57,7 @@ import Base from "../layouts/Base.astro";
       </div>
 
       <div class="received">
-        <p class="eyebrow">What the shop received</p>
+        <p class="eyebrow">What the storefront received</p>
         <pre id="received"><code>Nothing yet.</code></pre>
         <p class="muted small">
           The ID is unique to this site. Open this page on another domain, such as a Vercel preview URL, and you'll get a different one.
@@ -81,7 +81,7 @@ import Base from "../layouts/Base.astro";
   function ready() {
     if (!api()) return false;
     status.dataset.state = "found";
-    status.textContent = `human.txt extension detected (v${api()!.version}). The shop will ask before reading anything.`;
+    status.textContent = `human.txt extension detected (v${api()!.version}). The storefront will ask before reading anything.`;
     askCommerce.disabled = false;
     askAgent.disabled = false;
     return true;
@@ -142,7 +142,7 @@ import Base from "../layouts/Base.astro";
       if (res.layers.commerce) applyCommerce(res.layers.commerce);
       if (res.layers["ai-agents"]) applyAgent(res.layers["ai-agents"]);
     } catch (err) {
-      received.textContent = (err as Error).name === "HumanTxtDenied" ? "You declined. The shop gets nothing and carries on." : String(err);
+      received.textContent = (err as Error).name === "HumanTxtDenied" ? "You declined. The storefront gets nothing and carries on." : String(err);
     }
   }
 
@@ -181,23 +181,23 @@ import Base from "../layouts/Base.astro";
     border-color: color-mix(in srgb, var(--warn) 50%, transparent);
     color: var(--warn);
   }
-  .shop {
+  .storefront {
     padding-top: 48px;
   }
-  .shop-grid {
+  .storefront-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 24px;
     align-items: start;
   }
-  .shop-card {
+  .storefront-card {
     background: #f6f1e7;
     color: #2b2620;
     border-radius: var(--radius);
     padding: 28px;
     font-family: Georgia, "Times New Roman", serif;
   }
-  .shop-head {
+  .storefront-head {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -206,18 +206,18 @@ import Base from "../layouts/Base.astro";
     padding-bottom: 18px;
     border-bottom: 1px solid #d9cfbd;
   }
-  .shop-logo {
+  .storefront-logo {
     font-size: 24px;
     font-style: italic;
   }
-  .shop-pill {
+  .storefront-pill {
     font: 600 12px var(--font-sans);
     background: #2f5d3a;
     color: #f6f1e7;
     border-radius: 999px;
     padding: 5px 12px;
   }
-  .shop-pill[hidden] {
+  .storefront-pill[hidden] {
     display: none;
   }
   .ask {
@@ -314,7 +314,7 @@ import Base from "../layouts/Base.astro";
     font-size: 14px;
   }
   @media (max-width: 860px) {
-    .shop-grid {
+    .storefront-grid {
       grid-template-columns: 1fr;
     }
   }

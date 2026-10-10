@@ -13,7 +13,7 @@ AI-Summarize: allow
 Contact: none
 
 [commerce]
-Applies-To: shops, marketplaces
+Applies-To: storefronts, marketplaces
 Personalization: allow
 Retention: 90d
 Contact: email

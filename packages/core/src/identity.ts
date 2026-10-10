@@ -14,7 +14,7 @@ export function generateSecret(): Uint8Array {
   return crypto.getRandomValues(new Uint8Array(32));
 }
 
-/** Reduce any URL or origin string to its origin, e.g. "https://shop.example". */
+/** Reduce any URL or origin string to its origin, e.g. "https://storefront.example". */
 export function normalizeOrigin(urlOrOrigin: string): string {
   const origin = new URL(urlOrOrigin).origin;
   if (origin === "null") throw new Error(`Cannot derive an origin from ${urlOrOrigin}`);

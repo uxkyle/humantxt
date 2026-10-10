@@ -14,7 +14,7 @@
   --err: #ff7a7a;
   --grad: linear-gradient(100deg, #ffb48a 0%, #ff8a5c 30%, #e66fa8 62%, #9d8cff 100%);
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sans: "SF Pro Text", "SF Pro Display", "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", system-ui, "Segoe UI", sans-serif;
   color-scheme: dark;
 }
 

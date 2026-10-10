@@ -15,7 +15,8 @@
   --err: #ff7a7a;
   --grad: linear-gradient(100deg, #ffb48a 0%, #ff8a5c 30%, #e66fa8 62%, #9d8cff 100%);
 
-  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  /* SF Pro on Apple devices (system font, or installed copies), Inter everywhere else. */
+  --font-sans: "SF Pro Text", "SF Pro Display", "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --radius: 14px;

@@ -12,6 +12,6 @@ npm-workspaces monorepo. Node >= 22.12 (`nvm use`).
 - `npm test` — core unit tests
 - `npm run typecheck`
 - `npm run test:e2e` — builds site + extension, runs Playwright
-- `npm run dev` — site dev server. Astro's dev server runs in background mode; manage it with `npx astro dev stop|status|logs` from `apps/site`.
+- `npm run dev` — site dev server. Runs in the foreground (`--ignore-lock`) even when an agent starts it.
 
 Astro docs: https://docs.astro.build

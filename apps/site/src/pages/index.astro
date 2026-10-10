@@ -6,7 +6,7 @@ import Editor from "../components/Editor.tsx";
 const faqs: { q: string; a: string }[] = [
   {
     q: "What is human.txt?",
-    a: "A small plain-text file that says what websites, apps and AI agents may do with your data and how you want to be treated: whether they can train AI on you, sell your data, email you, or act on your behalf. It is split into layers so a shop, an AI assistant and a news site can each see only what applies to them.",
+    a: "A small plain-text file that says what websites, apps and AI agents may do with your data and how you want to be treated: whether they can train AI on you, sell your data, email you, or act on your behalf. It is split into layers so a storefront, an AI assistant and a news site can each see only what applies to them.",
   },
   {
     q: "Where does my file live?",
@@ -14,7 +14,7 @@ const faqs: { q: string; a: string }[] = [
   },
   {
     q: "Does this make me easier to track?",
-    a: "No. Every site gets a different ID, derived from a secret that never leaves your device. A shop can recognise you when you come back, but two sites can't compare IDs to learn you're the same person. There is deliberately no global ID.",
+    a: "No. Every site gets a different ID, derived from a secret that never leaves your device. A storefront can recognise you when you come back, but two sites can't compare IDs to learn you're the same person. There is deliberately no global ID.",
   },
   {
     q: "Is my file encrypted?",
@@ -96,8 +96,8 @@ const snippet = `<span class="c">// Visitors with a human.txt user agent send \`
           <p class="pillar-n">02</p>
           <h3>Layer</h3>
           <p>
-            Write a base layer for everyone, then layers for shops, AI agents, news, work and health. Each layer only overrides what it
-            needs to. A support bot learns how to talk to you; a shop learns how often it can email.
+            Write a base layer for everyone, then layers for storefronts, AI agents, news, work and health. Each layer only overrides what it
+            needs to. A support bot learns how to talk to you; a storefront learns how often it can email.
           </p>
         </article>
         <article class="pillar">

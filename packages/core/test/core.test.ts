@@ -117,17 +117,17 @@ describe("pairwiseId", () => {
   const secret = new Uint8Array(32).fill(7);
 
   it("is stable per origin and ignores path", async () => {
-    const a = await pairwiseId(secret, "https://shop.example/cart?x=1");
-    const b = await pairwiseId(secret, "https://shop.example");
+    const a = await pairwiseId(secret, "https://storefront.example/cart?x=1");
+    const b = await pairwiseId(secret, "https://storefront.example");
     expect(a).toBe(b);
     expect(a).toMatch(/^ht1_[a-z2-7]{26}$/);
   });
 
   it("differs across origins and secrets", async () => {
-    const a = await pairwiseId(secret, "https://shop.example");
+    const a = await pairwiseId(secret, "https://storefront.example");
     expect(await pairwiseId(secret, "https://news.example")).not.toBe(a);
-    expect(await pairwiseId(secret, "http://shop.example")).not.toBe(a);
-    expect(await pairwiseId(new Uint8Array(32).fill(8), "https://shop.example")).not.toBe(a);
+    expect(await pairwiseId(secret, "http://storefront.example")).not.toBe(a);
+    expect(await pairwiseId(new Uint8Array(32).fill(8), "https://storefront.example")).not.toBe(a);
   });
 
   it("round-trips secrets through storage encoding", () => {

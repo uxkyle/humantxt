@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "source ~/.nvm/nvm.sh >/dev/null && nvm use >/dev/null && exec npm run dev -w @humantxt/site"
+      ],
+      "port": 4321
+    }
+  ]
+}

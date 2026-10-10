@@ -141,7 +141,7 @@ test("the popup editor validates and saves the file", async () => {
   await expect(popup.locator("#status")).toHaveText("Saved · valid v0.1");
   await popup.close();
 
-  // The shop now sees the saved value.
+  // The storefront now sees the saved value.
   const page = await openDemo("localhost");
   await page.click("#ask-commerce");
   expect((await received(page)).layers.commerce!.Contact).toBe("none");

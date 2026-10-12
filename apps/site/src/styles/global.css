@@ -17,6 +17,8 @@
 
   /* SF Pro on Apple devices (system font, or installed copies), Inter everywhere else. */
   --font-sans: "SF Pro Text", "SF Pro Display", "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  /* Heavy display face for the wordmark: SF Pro Display Black, Inter Black elsewhere. */
+  --font-display: "SF Pro Display", "SF Pro", -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --radius: 14px;
